@@ -1,0 +1,21 @@
+name: Android
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  test:
+    runs-on:
+      - self-hosted
+      - macOS
+    steps:
+      - uses: TinycellCorp/Actions/.github/actions/checkout@main
+      - uses: TinycellCorp/Actions/.github/actions/setup-unity@main
+      - uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: Android
