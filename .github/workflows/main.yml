@@ -10,7 +10,7 @@ jobs:
       - self-hosted
       - macOS
     steps:
-      - uses: actions/checkout@v4
+      - uses: TinycellCorp/Actions/.github/workflows/checkout@main
       - run: git status
       - uses: game-ci/unity-builder@v4
         env:
