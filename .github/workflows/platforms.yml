@@ -1,13 +1,11 @@
-name: iOS
+name: Platforms
 
 on:
   workflow_dispatch:
 
 jobs:
-  test:
-    runs-on:
-      - self-hosted
-      - macOS
+  run:
+    runs-on: self-hosted, macOS
     steps:
       - uses: TinycellCorp/Actions/.github/actions/checkout@main
       - uses: TinycellCorp/Actions/.github/actions/setup-unity@main
@@ -18,3 +16,11 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: iOS
+      - uses: siren403/unity-builder@custom
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: Android
+

@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: TinycellCorp/Actions/.github/actions/checkout@main
       - uses: TinycellCorp/Actions/.github/actions/setup-unity@main
-      - uses: siren403/unity-builder@add-install-unity-modules
+      - uses: siren403/unity-builder@custom
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
