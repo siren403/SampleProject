@@ -18,6 +18,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: iOS
+      - run: git checkout .
       - uses: siren403/unity-builder@custom
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
