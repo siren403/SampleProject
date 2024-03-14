@@ -5,7 +5,9 @@ on:
 
 jobs:
   run:
-    runs-on: self-hosted, macOS
+    runs-on: 
+      - self-hosted
+      - macOS
     steps:
       - uses: TinycellCorp/Actions/.github/actions/checkout@main
       - uses: TinycellCorp/Actions/.github/actions/setup-unity@main
