@@ -13,4 +13,4 @@ jobs:
       - self-hosted
       - macOS
     steps:
-      - run: echo "run external"
+      - run: echo "run ${{ inputs.message }}"
