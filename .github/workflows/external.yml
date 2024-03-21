@@ -3,9 +3,11 @@ name: External
 on:
   workflow_dispatch:
     inputs:
-      message:
+      repo:
         required: true
-        default: 'empty'
+      ref:
+        required: true
+        default: main
           
 jobs:
   run:
@@ -13,4 +15,7 @@ jobs:
       - self-hosted
       - macOS
     steps:
-      - run: echo "run ${{ inputs.message }}"
+      - uses: actions/checkout@v4
+        with:
+          name: ${{ inputs.repo }}
+          ref: ${{ inputs.ref }}
