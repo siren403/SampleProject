@@ -1,0 +1,12 @@
+name: External
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  run:
+    runs-on: 
+      - self-hosted
+      - macOS
+    steps:
+      - run: echo "run external"
