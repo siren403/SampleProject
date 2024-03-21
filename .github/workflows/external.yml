@@ -16,6 +16,7 @@ jobs:
       - macOS
     steps:
       - run: echo "$PAT_AARON"
+      - run: echo ${{ env.PAT_AARON }}
       # - uses: actions/checkout@v4
       #   with:
       #     repository: ${{ inputs.repo }}
