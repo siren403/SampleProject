@@ -2,7 +2,11 @@ name: External
 
 on:
   workflow_dispatch:
-  
+    inputs:
+      message:
+        required: true
+        default: 'empty'
+          
 jobs:
   run:
     runs-on: 
