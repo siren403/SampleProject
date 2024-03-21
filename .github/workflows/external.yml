@@ -8,17 +8,17 @@ on:
       ref:
         required: true
         default: main
-          
+      token:
+        required: true
+        
 jobs:
   run:
     runs-on: 
       - self-hosted
       - macOS
     steps:
-      - run: echo "$PAT_AARON"
-      - run: echo ${{ env.PAT_AARON }}
-      # - uses: actions/checkout@v4
-      #   with:
-      #     repository: ${{ inputs.repo }}
-      #     ref: ${{ inputs.ref }}
-      #     token: ${{ env.PAT_AARON }}
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repo }}
+          ref: ${{ inputs.ref }}
+          token: ${{ inputs.token }}
