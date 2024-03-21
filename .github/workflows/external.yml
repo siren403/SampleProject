@@ -15,8 +15,9 @@ jobs:
       - self-hosted
       - macOS
     steps:
-      - uses: actions/checkout@v4
-        with:
-          repository: ${{ inputs.repo }}
-          ref: ${{ inputs.ref }}
-          token: ${{ env.PAT_AARON }}
+      - run: echo "$PAT_AARON"
+      # - uses: actions/checkout@v4
+      #   with:
+      #     repository: ${{ inputs.repo }}
+      #     ref: ${{ inputs.ref }}
+      #     token: ${{ env.PAT_AARON }}
