@@ -19,4 +19,5 @@ jobs:
         with:
           repository: ${{ inputs.repo }}
           ref: ${{ inputs.ref }}
-          ssh-key: ${{ secrets.SSH_AARON }}
+          token: ${{ secrets.PAT_AARON }}
+          # ssh-key: ${{ secrets.SSH_AARON }}
