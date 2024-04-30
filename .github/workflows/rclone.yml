@@ -2,10 +2,6 @@ name: rclone
 
 on:
   workflow_dispatch:
-    inputs:
-      remote:
-        type: string
-        required: true
 
 jobs:
   ls:
