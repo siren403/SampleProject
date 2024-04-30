@@ -13,4 +13,4 @@ jobs:
       - self-hosted
       - macOS
     steps:
-      - run: "rclone ls --max-depth 1 ${{ inputs.remote }}:"
+      - run: "rclone ls --max-depth 1 ${{ vars.RCLONE_REMOTE }}:"
