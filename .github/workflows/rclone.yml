@@ -1,0 +1,16 @@
+name: rclone
+
+on:
+  workflow_dispatch:
+    inputs:
+      remote:
+        type: string
+        required: true
+
+jobs:
+  ls:
+    runs-on:
+      - self-hosted
+      - macOS
+    steps:
+      - run: "rclone ls --max-depth 1 ${{ inputs.remote }}:"
