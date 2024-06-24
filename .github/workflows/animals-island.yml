@@ -12,7 +12,7 @@ on:
         type: string
         description: 'Version'
         required: true
-        default: '0.0.0'
+        default: '0.1.0'
                 
 jobs:
   testflight:
