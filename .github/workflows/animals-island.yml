@@ -1,0 +1,27 @@
+name: Animals Island
+
+on:
+  workflow_dispatch: 
+    inputs:
+      repo:
+        type: string
+        description: 'Repository url'
+        required: true
+      ref:
+        type: string
+        description: 'Branch or tag'
+        required: true
+
+jobs:
+  testflight:
+    runs-on:
+      - self-hosted
+      - macOS
+    steps:
+      - run: echo "Welcome to Animals Island!"
+      - run: echo "Repository is ${{ inputs.repo }}"
+      - run: echo "Branch or tag is ${{ inputs.ref }}"
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repo }}
+          ref: ${{ inputs.ref }}
