@@ -25,3 +25,5 @@ jobs:
         with:
           repository: ${{ inputs.repo }}
           ref: ${{ inputs.ref }}
+          submodules: recursive
+          fetch-depth: 0
