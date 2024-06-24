@@ -3,10 +3,6 @@ name: Animals Island
 on:
   workflow_dispatch: 
     inputs:
-      repo:
-        type: string
-        description: 'Repository url'
-        required: true
       branch:
         type: string
         description: 'Branch'
@@ -26,6 +22,6 @@ jobs:
       - run: echo "Repository is ${{ inputs.repo }}"
       - run: echo "Branch or tag is ${{ inputs.ref }}"
       - name: Checkout
-        run: git clone -b ${{ inputs.branch }} ${{ inputs.repo }} Repository && cd Repository && \
+        run: git clone -b ${{ inputs.branch }} ${{ secrets.ANIMALS_REPO_URL }} Repository && cd Repository && \
           git submodule init && \
           git submodule update
