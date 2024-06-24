@@ -7,9 +7,9 @@ on:
         type: string
         description: 'Repository url'
         required: true
-      ref:
+      branch:
         type: string
-        description: 'Branch or tag'
+        description: 'Branch'
         required: true
 
 jobs:
@@ -18,12 +18,13 @@ jobs:
       - self-hosted
       - macOS
     steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: '.github'
       - run: echo "Welcome to Animals Island!"
       - run: echo "Repository is ${{ inputs.repo }}"
       - run: echo "Branch or tag is ${{ inputs.ref }}"
-      - uses: actions/checkout@v4
-        with:
-          repository: ${{ inputs.repo }}
-          ref: ${{ inputs.ref }}
-          submodules: recursive
-          fetch-depth: 0
+      - name: Checkout
+        run: git clone -b ${{ inputs.branch }} ${{ inputs.repo }} && \
+          git submodule init && \
+          git submodule update
