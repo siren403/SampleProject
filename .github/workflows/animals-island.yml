@@ -1,0 +1,19 @@
+name: Animals Island
+
+on:
+  workflow_dispatch:
+
+jobs:
+  testflight:
+    runs-on:
+      - self-hosted
+      - macOS
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github
+      - name: Checkout
+        run: |
+          git clone codecommit::ap-northeast-2://Animal_Island Repository && cd Repository && \
+          git submodule init && git submodule update
