@@ -23,3 +23,15 @@ jobs:
           git clone codecommit::ap-northeast-2://Animal_Island Repository && cd Repository && \
           git submodule init && git submodule update && \
           git checkout ${{ inputs.ref }}
+      - name: Move mobile app files to root
+        run: |
+          ls -lah
+          shopt -s dotglob
+          mv Repository/The_Maldives/* .
+          rm -rf Repository
+          ls -lah
+      # - uses: TinycellCorp/Actions/.github/actions/cache@main
+      #   with:
+      #     platform: iOS
+      # - name: Export Xcode project
+        
