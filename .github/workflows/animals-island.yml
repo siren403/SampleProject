@@ -3,11 +3,11 @@ name: Animals Island
 on:
   workflow_dispatch:
     inputs:
-      branch:
+      ref:
         type: string
-        description: 'Branch'
+        description: 'Ref'
         required: true
-        default: 'HEAD'
+        default: 'origin/HEAD'
 jobs:
   testflight:
     runs-on:
@@ -20,5 +20,6 @@ jobs:
             .github
       - name: Checkout
         run: |
-          git clone -b ${{ inputs.branch }} codecommit::ap-northeast-2://Animal_Island Repository && cd Repository && \
-          git submodule init && git submodule update
+          git clone codecommit::ap-northeast-2://Animal_Island Repository && cd Repository && \
+          git submodule init && git submodule update && \
+          git checkout ${{ inputs.ref }}
