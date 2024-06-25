@@ -32,6 +32,7 @@ jobs:
           cd Repository
           git checkout ${{ inputs.ref }}
           sed -i '' 's/https:\/\/git-codecommit.ap-northeast-2.amazonaws.com\/v1\/repos\//codecommit::ap-northeast-2:\/\//g' .gitmodules
+          git config --add protocol.codecommit.allow always
           git submodule init
           git submodule update
       - name: Move mobile app files to root
