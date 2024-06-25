@@ -50,7 +50,5 @@ jobs:
           versioning: Custom
           version: ${{ inputs.version }}
           targetPlatform: iOS
-          customParameters: -skipMissingUPID
           skipActivation: true
-
           
