@@ -19,6 +19,7 @@ jobs:
     runs-on:
       - self-hosted
       - macOS
+    environment: animals-island
     steps:
       - uses: actions/checkout@v4
         with:
@@ -54,9 +55,9 @@ jobs:
           skipActivation: true
       - name: Build and upload testflight
         env:
-          APP_IDENTIFIER: ${{ vars.ANIMALS_APP_IDENTIFIER }}
-          APPLE_ID: ${{ vars.ANIMALS_APPLE_ID }}
-          ITC_TEAM_ID: ${{ vars.ANIMALS_ITC_TEAM_ID }}
-          TEAM_ID: ${{ vars.ANIMALS_TEAM_ID }}
-          FASTLANE_PASSWORD: ${{ secrets.ANIMALS_FASTLANE_PASSWORD }}
+          APP_IDENTIFIER: ${{ vars.APP_IDENTIFIER }}
+          APPLE_ID: ${{ vars.APPLE_ID }}
+          ITC_TEAM_ID: ${{ vars.ITC_TEAM_ID }}
+          TEAM_ID: ${{ vars.TEAM_ID }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
         run: Xcode/init.sh "build/iOS" "run.sh"
