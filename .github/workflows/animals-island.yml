@@ -24,6 +24,7 @@ jobs:
         with:
           sparse-checkout: |
             .github
+            Xcode
       - name: Checkout
         run: |
           git clone codecommit::ap-northeast-2://Animal_Island Repository && cd Repository && \
@@ -51,4 +52,11 @@ jobs:
           version: ${{ inputs.version }}
           targetPlatform: iOS
           skipActivation: true
-          
+      - name: Build and upload testflight
+        env:
+          APP_IDENTIFIER: ${{ vars.APP_IDENTIFIER }}
+          APPLE_ID: ${{ vars.APPLE_ID }}
+          ITC_TEAM_ID: ${{ vars.ITC_TEAM_ID }}
+          TEAM_ID: ${{ vars.TEAM_ID }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        run: Xcode/init.sh "build/iOS" "run.sh"
