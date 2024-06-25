@@ -8,11 +8,11 @@ on:
         description: 'Ref'
         required: true
         default: 'origin/HEAD'
-      version:
-        type: string
-        description: 'Version'
-        required: true
-        default: '0.1.0'
+      # version:
+      #   type: string
+      #   description: 'Version'
+      #   required: true
+      #   default: '0.1.0'
                 
 jobs:
   testflight:
@@ -49,8 +49,8 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          versioning: Custom
-          version: ${{ inputs.version }}
+          versioning: None
+          # version: ${{ inputs.version }}
           targetPlatform: iOS
           skipActivation: true
       - name: Build and upload testflight
