@@ -28,9 +28,12 @@ jobs:
             Xcode
       - name: Checkout
         run: |
-          git clone codecommit::ap-northeast-2://Animal_Island Repository && cd Repository && \
-          git checkout ${{ inputs.ref }} && \
-          git submodule init && git submodule update
+          git clone codecommit::ap-northeast-2://Animal_Island Repository
+          cd Repository
+          git checkout ${{ inputs.ref }}
+          sed -i '' 's/https:\/\/git-codecommit.ap-northeast-2.amazonaws.com\/v1\/repos\//codecommit::ap-northeast-2:\/\//g' .gitmodules
+          git submodule init
+          git submodule update
       - name: Move mobile app files to root
         run: |
           ls -lah
