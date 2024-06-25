@@ -63,4 +63,4 @@ jobs:
           ITC_TEAM_ID: ${{ vars.ITC_TEAM_ID }}
           TEAM_ID: ${{ vars.TEAM_ID }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-        run: Xcode/init.sh "build/iOS" "run.sh"
+        run: Xcode/init.sh "build/iOS/iOS" "run.sh"
