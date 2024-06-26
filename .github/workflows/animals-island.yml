@@ -8,6 +8,9 @@ on:
         description: 'Branch'
         required: true
         default: 'main'
+      slack-bot-token:
+        type: string
+        description: 'Slack bot token'
       channel-id:
         type: string
         description: 'Slack channel id'
@@ -25,7 +28,7 @@ jobs:
     environment: animals-island
     steps:
       - name: Notify started
-        if: ${{ inputs.channel-id != '' }}
+        if: ${{ inputs.slack-bot-token != '' && inputs.channel-id != '' }}
         id: slack
         uses: slackapi/slack-github-action@v1.26.0
         with:
@@ -95,7 +98,7 @@ jobs:
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
         run: Xcode/init.sh "build/iOS/iOS" "run.sh"
       - name: Notify finished
-        if: ${{ inputs.channel-id != '' }}
+        if: ${{ inputs.slack-bot-token != '' && inputs.channel-id != '' }}
         uses: slackapi/slack-github-action@v1.26.0
         with:
           channel-id: ${{ inputs.channel-id }}
