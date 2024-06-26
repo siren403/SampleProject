@@ -3,11 +3,11 @@ name: Animals Island
 on:
   workflow_dispatch:
     inputs:
-      ref:
+      branch:
         type: string
-        description: 'Ref'
+        description: 'Branch'
         required: true
-        default: 'origin/HEAD'
+        default: 'main'
       # version:
       #   type: string
       #   description: 'Version'
@@ -30,7 +30,7 @@ jobs:
         run: |
           git clone codecommit::ap-northeast-2://Animal_Island Repository
           cd Repository
-          git checkout ${{ inputs.ref }}
+          git checkout ${{ inputs.branch }}
           sed -i '' 's/https:\/\/git-codecommit.ap-northeast-2.amazonaws.com\/v1\/repos\//codecommit::ap-northeast-2:\/\//g' .gitmodules
           git submodule init
           git submodule update
