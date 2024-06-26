@@ -8,6 +8,9 @@ on:
         description: 'Branch'
         required: true
         default: 'main'
+      channel-id:
+        type: string
+        description: 'Slack channel id'
       # version:
       #   type: string
       #   description: 'Version'
@@ -21,6 +24,31 @@ jobs:
       - macOS
     environment: animals-island
     steps:
+      - name: Notify started
+        if: ${{ inputs.channel-id != '' }}
+        id: slack
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          channel-id: ${{ inputs.channel-id }}
+          payload: |
+            {
+              "text": "Deployment started (In Progress)",
+              "attachments": [
+                {
+                  "pretext": "Deployment started",
+                  "color": "dbab09",
+                  "fields": [
+                    {
+                      "title": "Status",
+                      "short": true,
+                      "value": "In Progress"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}    
       - uses: actions/checkout@v4
         with:
           sparse-checkout: |
@@ -66,3 +94,28 @@ jobs:
           FASTLANE_USER: ${{ vars.APPLE_ID }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
         run: Xcode/init.sh "build/iOS/iOS" "run.sh"
+      - name: Notify finished
+        if: ${{ inputs.channel-id != '' }}
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          channel-id: ${{ inputs.channel-id }}
+          update-ts: ${{ steps.slack.outputs.ts }}
+          payload: |
+            {
+              "text": "Deployment finished (Completed)",
+              "attachments": [
+                {
+                  "pretext": "Deployment finished",
+                  "color": "28a745",
+                  "fields": [
+                    {
+                      "title": "Status",
+                      "short": true,
+                      "value": "Completed"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}  
