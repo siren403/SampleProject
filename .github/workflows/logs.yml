@@ -25,17 +25,19 @@ jobs:
           -H "X-GitHub-Api-Version: 2022-11-28" \
           /repos/$REPO/actions/runs/$RUN_ID/jobs
       - id: job1-id
-        uses: ayachensiyuan/get-action-job-id@v1.6
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: daleyjem/gh-job-id@v1
         with:
-          job-name: 'job1'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          job_name: 'job1'
       - env:
           JOB_ID: ${{ steps.job1-id.outputs.jobId }}
         run: |
-          response=$(gh api \
+          gh api \
           -H "Accept: application/vnd.github+json" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
-          /repos/$REPO/actions/jobs/$JOB_ID/logs)
+          /repos/$REPO/actions/jobs/$JOB_ID/logs >> logs.txt
 
-          echo "$response"
+          echo "::group::logs"
+          cat logs.txt
+          echo "::endgroup::"
+
