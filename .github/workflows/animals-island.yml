@@ -156,13 +156,13 @@ jobs:
           gh api \
           -H "Accept: application/vnd.github+json" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
-          /repos/$REPO/actions/jobs/$JOB_ID/logs >> logs-${{ github.run_id }}.txt
+          /repos/$REPO/actions/jobs/$JOB_ID/logs >> logs${{ github.run_id }}.txt
       - name: Upload logs on failure
         env:
           SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
         id: upload_logs
         run: |
-          curl -F file=@logs-${{ github.run_id }}.txt -F "initial_comment=Failed workflow logs" \
+          curl -F file=@logs${{ github.run_id }}.txt -F "initial_comment=Failed workflow logs" \
                -F channels=${{ inputs.channel-id }}
                -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
                https://slack.com/api/files.upload | tee response.json
