@@ -148,8 +148,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         uses: octokit/request-action@v2.x
         with:
-          route: GET /repos/:owner/:repo/actions/runs/:run_id/logs
-          run_id: ${{ github.event.workflow_run.id }}
+          route: GET /repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/logs
       # - name: Upload logs on failure
       #   env:
       #     SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
