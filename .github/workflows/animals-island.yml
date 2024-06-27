@@ -144,10 +144,10 @@ jobs:
     steps:
       - name: Get testflight job id
         id: testflight-id
-        uses: daleyjem/gh-job-id@v1
+        uses: TinycellCorp/Actions/.github/actions/get-job-id@main
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          job_name: 'testflight'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: 'testflight'
       - name: Download logs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -163,7 +163,7 @@ jobs:
           SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
         id: upload_logs
         run: |
-          curl -F file=@logs.txt -F "initial_comment=Build failed. Here is the log file." \
+          curl -F file=@logs.txt -F "initial_comment=Failed workflow logs" \
                -F channels=${{ inputs.channel-id }} \
                -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
                https://slack.com/api/files.upload | tee response.json
@@ -188,15 +188,13 @@ jobs:
                       "title": "Status",
                       "short": true,
                       "value": "Failed"
-                    }
+                    },
+                    {
+                    "title": "Logs",
+                    "short": false,
+                    "value": "${{ steps.upload_logs.outputs.file_url }}"
+                  }
                   ]
-                }
-              ],
-              "actions": [
-                {
-                  "type": "button",
-                  "text": "View Logs",
-                  "url": "${{ steps.upload_logs.outputs.file_url }}"
                 }
               ]
             }
