@@ -6,14 +6,12 @@ on:
 jobs:
   job1:
     runs-on:
-      - self-hosted
-      - macOS
+      - ubuntu-latest
     steps:
       - run: echo "run job1"
   job2:
     runs-on:
-      - self-hosted
-      - macOS
+      - ubuntu-latest
     needs:
       - job1
     steps:
