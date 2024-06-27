@@ -33,7 +33,12 @@ jobs:
       - env:
           JOB_ID: ${{ steps.job1-id.outputs.jobId }}
         run: |
-          gh api \
+          response=$(gh api \
           -H "Accept: application/vnd.github+json" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
-          /repos/$REPO/actions/jobs/$JOB_ID/logs
+          /repos/$REPO/actions/jobs/$JOB_ID/logs \
+          --json)
+
+          headers=$(echo $response | jq '.responseHeaders')
+          echo "Response Headers:"
+          echo "$headers"
