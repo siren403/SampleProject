@@ -8,6 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "running job1"
+      - name: Using action
+        if: get-job-id
+        uses: TinycellCorp/Actions/.github/actions/get-job-id@main
+        with:
+          name: job1
+          token: ${{ github.token }}
+      - name: echo job1 id
+        run: echo "${{ steps.get-job-id.outputs.id }}"
   job2:
     runs-on: ubuntu-latest
     needs: job1
