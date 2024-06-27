@@ -18,7 +18,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       REPO: ${{ github.repository }}
       RUN_ID: ${{ github.run_id }}
-      JOB_ID: ${{ needs.job1.job.id }}
+      JOB_ID: ${{ needs.job1.id }}
     steps:
       - run: |
           gh api \
