@@ -8,9 +8,6 @@ on:
         description: 'Branch'
         required: true
         default: 'main'
-      slack-api-token:
-        type: string
-        description: 'Slack api token'
       slack-bot-token:
         type: string
         description: 'Slack bot token'
@@ -32,8 +29,7 @@ jobs:
     steps:
       - name: Validation slack inputs
         run: |
-          if [ -z "${{ inputs.slack-api-token }}" ] || \
-             [ -z "${{ inputs.slack-bot-token }}" ] || \
+          if [ -z "${{ inputs.slack-bot-token }}" ] || \
              [ -z "${{ inputs.channel-id }}" ]; then
             echo "One or both inputs are missing."
             echo "ENABLED_SLACK=false" >> $GITHUB_ENV
@@ -44,6 +40,8 @@ jobs:
       - name: Notify started
         if: env.ENABLED_SLACK == 'true'
         id: slack
+        env:
+          SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
         uses: slackapi/slack-github-action@v1.26.0
         with:
           channel-id: ${{ inputs.channel-id }}
@@ -64,8 +62,6 @@ jobs:
                 }
               ]
             }
-        env:
-          SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
       - uses: actions/checkout@v4
         with:
           sparse-checkout: |
@@ -112,6 +108,8 @@ jobs:
         run: Xcode/init.sh "build/iOS/iOS" "run.sh"
       - name: Notify finished
         if: env.ENABLED_SLACK == 'true'
+        env:
+          SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
         uses: slackapi/slack-github-action@v1.26.0
         with:
           channel-id: ${{ inputs.channel-id }}
@@ -133,10 +131,10 @@ jobs:
                 }
               ]
             }
-        env:
-          SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
       - name: Upload logs on failure
         if: failure() && env.RUN_JOB == 'true'
+        env:
+          SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
         id: upload_logs
         run: |
           echo "Workflow failed. Collecting logs..."
@@ -149,13 +147,15 @@ jobs:
           unzip -o actions_logs.zip -d actions_logs
           cat actions_logs/*.txt > combined_logs.txt
           curl -F file=@combined_logs.txt -F "initial_comment=Build failed. Here is the log file." \
-               -F channels=<YOUR_SLACK_CHANNEL_ID> \
-               -H "Authorization: Bearer ${{ inputs.slack-api-token }}" \
+               -F channels=${{ inputs.channel-id }} \
+               -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
                https://slack.com/api/files.upload | tee response.json
           export FILE_URL=$(cat response.json | jq -r '.file.permalink')
           echo "::set-output name=file_url::$FILE_URL"
       - name: Notify if failed
         if: failure() && env.RUN_JOB == 'true'
+        env:
+          SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
         uses: slackapi/slack-github-action@v1.26.0
         with:
           channel-id: ${{ inputs.channel-id }}
@@ -184,5 +184,4 @@ jobs:
                 }
               ]
             }
-        env:
-          SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
+            
