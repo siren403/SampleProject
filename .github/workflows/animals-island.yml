@@ -26,8 +26,11 @@ jobs:
       - self-hosted
       - macOS
     environment: animals-island
+    outputs:
+      enabled-slack: ${{ steps.slack-inputs.outputs.enabled-slack }}
     steps:
       - name: Validation slack inputs
+        id: slack-inputs
         run: |
           if [ -z "${{ inputs.slack-bot-token }}" ] || \
              [ -z "${{ inputs.channel-id }}" ]; then
