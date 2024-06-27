@@ -163,7 +163,7 @@ jobs:
         id: upload_logs
         run: |
           curl -F file=@logs-${{ github.run_id }}.txt -F "initial_comment=Failed workflow logs" \
-               -F "channels=${{ inputs.channel-id }}"
+               -F channels=${{ inputs.channel-id }}
                -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
                https://slack.com/api/files.upload | tee response.json
           file_url=$(cat response.json | jq -r '.file.permalink')
