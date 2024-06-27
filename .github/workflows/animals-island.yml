@@ -151,6 +151,7 @@ jobs:
           job_name: 'testflight'
       - name: Download logs
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
           JOB_ID: ${{ steps.testflight-id.outputs.job_id }}
         run: |
