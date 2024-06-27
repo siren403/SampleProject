@@ -143,54 +143,61 @@ jobs:
     if: failure()
     steps:
       - run: echo "${{ needs.testflight.outputs.enabled-slack }}"
-      - name: Upload logs on failure
-        env:
-          SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
-        id: upload_logs
-        run: |
-          echo "Workflow failed. Collecting logs..."
-          RUN_ID=$(echo $GITHUB_RUN_ID)
-          echo "Run ID: $RUN_ID"
-          curl -H "Accept: application/vnd.github.v3+json" \
-               -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-               "https://api.github.com/repos/${{ github.repository }}/actions/runs/$RUN_ID/logs" \
-               -L -o actions_logs
-          unzip -o actions_logs.zip -d actions_logs
-          cat actions_logs/*.txt > combined_logs.txt
-          curl -F file=@combined_logs.txt -F "initial_comment=Build failed. Here is the log file." \
-               -F channels=${{ inputs.channel-id }} \
-               -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
-               https://slack.com/api/files.upload | tee response.json
-          export FILE_URL=$(cat response.json | jq -r '.file.permalink')
-          echo "::set-output name=file_url::$FILE_URL"
-      - name: Notify if failed
-        env:
-          SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
-        uses: slackapi/slack-github-action@v1.26.0
+      - name: Download logs
+        uses: octokit/request-action@v2.x
         with:
-          channel-id: ${{ inputs.channel-id }}
-          update-ts: ${{ steps.slack.outputs.ts }}
-          payload: |
-            {
-              "text": "Deployment finished (Failed)",
-              "attachments": [
-                {
-                  "pretext": "Deployment finished",
-                  "color": "FF2C98",
-                  "fields": [
-                    {
-                      "title": "Status",
-                      "short": true,
-                      "value": "Failed"
-                    }
-                  ]
-                }
-              ],
-              "actions": [
-                {
-                  "type": "button",
-                  "text": "View Logs",
-                  "url": "${{ steps.upload_logs.outputs.file_url }}"
-                }
-              ]
-            }
+          route: GET /repos/{owner}/{repo}/actions/runs/{run-id}/logs
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.repository }}
+          run-id: ${{ github.run_id }}
+      # - name: Upload logs on failure
+      #   env:
+      #     SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
+      #   id: upload_logs
+      #   run: |
+      #     echo "Workflow failed. Collecting logs..."
+      #     RUN_ID=$(echo $GITHUB_RUN_ID)
+      #     echo "Run ID: $RUN_ID"
+      #     curl -H "Accept: application/vnd.github.v3+json" \
+      #          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+      #          "https://api.github.com/repos/${{ github.repository_owner }}/${{ github.repository }}/actions/runs/$RUN_ID/logs" \
+      #          -L -o actions_logs.zip
+      #     unzip -o actions_logs.zip -d actions_logs
+      #     cat actions_logs/*.txt > combined_logs.txt
+      #     curl -F file=@combined_logs.txt -F "initial_comment=Build failed. Here is the log file." \
+      #          -F channels=${{ inputs.channel-id }} \
+      #          -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+      #          https://slack.com/api/files.upload | tee response.json
+      #     export FILE_URL=$(cat response.json | jq -r '.file.permalink')
+      #     echo "::set-output name=file_url::$FILE_URL"
+      # - name: Notify if failed
+      #   env:
+      #     SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
+      #   uses: slackapi/slack-github-action@v1.26.0
+      #   with:
+      #     channel-id: ${{ inputs.channel-id }}
+      #     update-ts: ${{ steps.slack.outputs.ts }}
+      #     payload: |
+      #       {
+      #         "text": "Deployment finished (Failed)",
+      #         "attachments": [
+      #           {
+      #             "pretext": "Deployment finished",
+      #             "color": "FF2C98",
+      #             "fields": [
+      #               {
+      #                 "title": "Status",
+      #                 "short": true,
+      #                 "value": "Failed"
+      #               }
+      #             ]
+      #           }
+      #         ],
+      #         "actions": [
+      #           {
+      #             "type": "button",
+      #             "text": "View Logs",
+      #             "url": "${{ steps.upload_logs.outputs.file_url }}"
+      #           }
+      #         ]
+      #       }
