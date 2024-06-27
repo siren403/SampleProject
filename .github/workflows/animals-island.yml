@@ -37,7 +37,7 @@ jobs:
             echo "Both inputs are provided."
             echo "ENABLED_SLACK=true" >> $GITHUB_ENV
           fi
-          echo "::set-output name=enabled-slack::$ENABLED_SLACK"
+          echo "enabled-slack=$ENABLED_SLACK" >> $GITHUB_OUTPUT
       - name: Notify started
         if: env.ENABLED_SLACK == 'true'
         id: slack
