@@ -9,7 +9,7 @@ jobs:
     steps:
       - run: echo "running job1"
       - name: Using action
-        if: get-job-id
+        id: get-job-id
         uses: TinycellCorp/Actions/.github/actions/get-job-id@main
         with:
           name: job1
