@@ -1,0 +1,24 @@
+name: Logs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  job1:
+    runs-on:
+      - self-hosted
+      - macOS
+    steps:
+      - run: echo "run job1"
+  job2:
+    runs-on:
+      - self-hosted
+      - macOS
+    needs:
+      - job1
+    steps:
+      - run: |
+          gh api \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          /repos/${{ github.repository }}/actions/jobs/job1
