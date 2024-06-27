@@ -21,6 +21,7 @@ jobs:
           gh api \
           -H "Accept: application/vnd.github+json" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
-          /repos/$REPO/actions/runs/$RUN_ID/jobs
+          /repos/$REPO/actions/runs/$RUN_ID/jobs \
+          --jq '.jobs[] | select(.name == "build") | .id'
         
           
