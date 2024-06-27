@@ -140,9 +140,8 @@ jobs:
       - self-hosted
       - macOS
     needs: [ testflight ]
-    if: failure()
+    if: ${{ failure() && needs.testflight.outputs.enabled-slack == 'true' }}
     steps:
-      - run: echo "${{ needs.testflight.outputs.enabled-slack }}"
       - name: Get testflight job id
         id: testflight-id
         uses: daleyjem/gh-job-id@v1
