@@ -141,29 +141,6 @@ jobs:
     needs: [ testflight ]
     if: ${{ failure() && needs.testflight.outputs.enabled-slack == 'true' }}
     steps:
-      - name: Notify if failed
-        env:
-          SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
-        uses: slackapi/slack-github-action@v1.26.0
-        with:
-          channel-id: ${{ inputs.channel-id }}
-          update-ts: ${{ needs.testflight.outputs.slack-ts }}
-          payload: |
-            {
-              "attachments": [
-                {
-                  "pretext": "Deployment finished",
-                  "color": "FF2C98",
-                  "fields": [
-                    {
-                      "title": "Status",
-                      "short": true,
-                      "value": "Failed"
-                    }
-                  ]
-                }
-              ]
-            }
       - name: Get testflight job id
         id: testflight-id
         uses: TinycellCorp/Actions/.github/actions/get-job-id@main
@@ -186,9 +163,36 @@ jobs:
         id: upload_logs
         run: |
           curl -F file=@logs.txt -F "initial_comment=Failed workflow logs" \
-               -F channels=${{ inputs.channel-id }} \
                -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
                https://slack.com/api/files.upload | tee response.json
           export FILE_URL=$(cat response.json | jq -r '.file.permalink')
           echo "::set-output name=file_url::$FILE_URL"
+      - name: Notify if failed
+        env:
+          SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          channel-id: ${{ inputs.channel-id }}
+          update-ts: ${{ needs.testflight.outputs.slack-ts }}
+          payload: |
+            {
+              "attachments": [
+                {
+                  "pretext": "Deployment finished",
+                  "color": "FF2C98",
+                  "fields": [
+                    {
+                      "title": "Status",
+                      "short": true,
+                      "value": "Failed"
+                    },
+                    {
+                      "title": "Logs",
+                      "short": false,
+                      "value": "<${{ steps.upload_logs.outputs.file_url }}|logs>"
+                    }
+                  ]
+                }
+              ]
+            }
       
