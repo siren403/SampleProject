@@ -40,6 +40,7 @@ jobs:
             echo "Both inputs are provided."
             echo "ENABLED_SLACK=true" >> $GITHUB_ENV
           fi
+          echo "$ENABLED_SLACK"
           echo "enabled-slack=$ENABLED_SLACK" >> $GITHUB_OUTPUT
       - name: Notify started
         if: env.ENABLED_SLACK == 'true'
@@ -144,6 +145,8 @@ jobs:
     steps:
       - run: echo "${{ needs.testflight.outputs.enabled-slack }}"
       - name: Download logs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         uses: octokit/request-action@v2.x
         with:
           route: GET /repos/{owner}/{repo}/actions/runs/{run-id}/logs
