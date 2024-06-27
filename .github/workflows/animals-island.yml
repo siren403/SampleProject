@@ -158,22 +158,6 @@ jobs:
           -H "Accept: application/vnd.github+json" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
           /repos/$REPO/actions/jobs/$JOB_ID/logs >> logs.txt
-          # curl -L \
-          # -H "Accept: application/vnd.github+json" \
-          # -H "Authorization: Bearer $GH_TOKEN" \
-          # -H "X-GitHub-Api-Version: 2022-11-28" \
-          # https://api.github.com/repos/$REPO/actions/jobs/$JOB_ID/logs >> logs.txt
-      - name: Upload logs on failure
-        env:
-          SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
-        id: upload_logs
-        run: |
-          curl -F file=@logs.txt -F "initial_comment=Failed workflow logs" \
-               -F channels=${{ inputs.channel-id }} \
-               -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
-               https://slack.com/api/files.upload | tee response.json
-          export FILE_URL=$(cat response.json | jq -r '.file.permalink')
-          echo "::set-output name=file_url::$FILE_URL"
       - name: Notify if failed
         env:
           SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
@@ -193,13 +177,20 @@ jobs:
                       "title": "Status",
                       "short": true,
                       "value": "Failed"
-                    },
-                    {
-                    "title": "Logs",
-                    "short": false,
-                    "value": "${{ steps.upload_logs.outputs.file_url }}"
-                  }
+                    }
                   ]
                 }
               ]
             }
+      - name: Upload logs on failure
+        env:
+          SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
+        id: upload_logs
+        run: |
+          curl -F file=@logs.txt -F "initial_comment=Failed workflow logs" \
+               -F channels=${{ inputs.channel-id }} \
+               -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+               https://slack.com/api/files.upload | tee response.json
+          export FILE_URL=$(cat response.json | jq -r '.file.permalink')
+          echo "::set-output name=file_url::$FILE_URL"
+      
