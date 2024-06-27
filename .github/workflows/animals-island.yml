@@ -165,8 +165,12 @@ jobs:
           curl -F file=@logs.txt -F "initial_comment=Failed workflow logs" \
                -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
                https://slack.com/api/files.upload | tee response.json
+               
           export FILE_URL=$(cat response.json | jq -r '.file.permalink')
+          
           echo "::set-output name=file_url::$FILE_URL"
+      - name: Checkout file url
+        run: echo "${{ steps.upload_logs.outputs.file_url }}"
       - name: Notify if failed
         env:
           SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
