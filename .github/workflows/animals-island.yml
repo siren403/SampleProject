@@ -140,7 +140,7 @@ jobs:
       - self-hosted
       - macOS
     needs: [ testflight ]
-    if: failure() && ${{ needs.testflight.outputs.enabled-slack }} == 'true'
+    if: failure()
     steps:
       - name: Upload logs on failure
         env:
