@@ -37,6 +37,7 @@ jobs:
             echo "Both inputs are provided."
             echo "ENABLED_SLACK=true" >> $GITHUB_ENV
           fi
+          echo "::set-output name=enabled-slack::$ENABLED_SLACK"
       - name: Notify started
         if: env.ENABLED_SLACK == 'true'
         id: slack
@@ -131,8 +132,14 @@ jobs:
                 }
               ]
             }
+  failure:
+    runs-on:
+      - self-hosted
+      - macOS
+    needs: [ testflight ]
+    if: failure() && ${{ needs.testflight.outputs.enabled-slack }} == 'true'
+    steps:
       - name: Upload logs on failure
-        if: failure() && env.RUN_JOB == 'true'
         env:
           SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
         id: upload_logs
@@ -153,7 +160,6 @@ jobs:
           export FILE_URL=$(cat response.json | jq -r '.file.permalink')
           echo "::set-output name=file_url::$FILE_URL"
       - name: Notify if failed
-        if: failure() && env.RUN_JOB == 'true'
         env:
           SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
         uses: slackapi/slack-github-action@v1.26.0
@@ -184,4 +190,3 @@ jobs:
                 }
               ]
             }
-            
