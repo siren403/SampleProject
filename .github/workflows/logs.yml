@@ -30,7 +30,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           job_name: 'job1'
       - env:
-          JOB_ID: ${{ steps.job1-id.outputs.jobId }}
+          JOB_ID: ${{ steps.job1-id.outputs.job_id }}
         run: |
           gh api \
           -H "Accept: application/vnd.github+json" \
