@@ -32,6 +32,7 @@ jobs:
     outputs:
       enabled-slack: ${{ steps.slack-inputs.outputs.enabled-slack }}
       slack-ts: ${{ steps.slack.outputs.ts }}
+      commit-message: ${{ steps.checkout.outputs.commit-message }}
     steps:
       - name: Validation slack inputs
         id: slack-inputs
@@ -75,12 +76,37 @@ jobs:
             .github
             Xcode
       - name: Checkout
+        id: checkout
         run: |
           git clone -b ${{ inputs.branch }} ${{ env.REPOSITORY_URL }} Repository
           cd Repository
           sed -i '' 's/https:\/\/git-codecommit.ap-northeast-2.amazonaws.com\/v1\/repos\//codecommit::ap-northeast-2:\/\//g' .gitmodules
           git submodule init
           git submodule update
+          echo "commit-message=$(git log -1 --oneline)" >> $GITHUB_OUTPUT
+      - name: Notify checkout
+        if: env.ENABLED_SLACK == 'true'
+        env:
+          SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          channel-id: ${{ inputs.channel-id }}
+          payload: |
+            {
+              "attachments": [
+                {
+                  "pretext": "${{ env.PROJECT_NAME }} testflight checkout\n${{ steps.checkout.outputs.commit-message }}",
+                  "color": "dbab09",
+                  "fields": [
+                    {
+                      "title": "Status",
+                      "short": true,
+                      "value": "In Progress"
+                    }
+                  ]
+                }
+              ]
+            }
       - name: Move mobile app files to root
         run: |
           ls -lah
@@ -125,7 +151,7 @@ jobs:
             {
               "attachments": [
                 {
-                  "pretext": "${{ env.PROJECT_NAME }} testflight finished",
+                  "pretext": "${{ env.PROJECT_NAME }} testflight finished\n${{ steps.checkout.outputs.commit-message }}",
                   "color": "28a745",
                   "fields": [
                     {
@@ -184,7 +210,7 @@ jobs:
             {
               "attachments": [
                 {
-                  "pretext": "${{ env.PROJECT_NAME }} testflight finished",
+                  "pretext": "${{ env.PROJECT_NAME }} testflight finished\n${{ needs.testflight.outputs.commit-message }}",
                   "color": "FF2C98",
                   "fields": [
                     {
