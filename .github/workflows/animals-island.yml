@@ -19,7 +19,10 @@ on:
       #   description: 'Version'
       #   required: true
       #   default: '0.1.0'
-                
+env:
+  PROJECT_NAME: Animals Island
+  REPOSITORY_URL: codecommit::ap-northeast-2://Animal_Island
+               
 jobs:
   testflight:
     runs-on:
@@ -54,7 +57,7 @@ jobs:
             {
               "attachments": [
                 {
-                  "pretext": "Deployment started",
+                  "pretext": "${{ env.PROJECT_NAME }} testflight started",
                   "color": "dbab09",
                   "fields": [
                     {
@@ -73,7 +76,7 @@ jobs:
             Xcode
       - name: Checkout
         run: |
-          git clone -b ${{ inputs.branch }} codecommit::ap-northeast-2://Animal_Island Repository
+          git clone -b ${{ inputs.branch }} ${{ env.REPOSITORY_URL }} Repository
           cd Repository
           sed -i '' 's/https:\/\/git-codecommit.ap-northeast-2.amazonaws.com\/v1\/repos\//codecommit::ap-northeast-2:\/\//g' .gitmodules
           git submodule init
@@ -122,7 +125,7 @@ jobs:
             {
               "attachments": [
                 {
-                  "pretext": "Deployment finished",
+                  "pretext": "${{ env.PROJECT_NAME }} testflight finished",
                   "color": "28a745",
                   "fields": [
                     {
@@ -181,7 +184,7 @@ jobs:
             {
               "attachments": [
                 {
-                  "pretext": "Deployment finished",
+                  "pretext": "${{ env.PROJECT_NAME }} testflight finished",
                   "color": "FF2C98",
                   "fields": [
                     {
